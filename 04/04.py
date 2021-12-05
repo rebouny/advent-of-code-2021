@@ -22,13 +22,13 @@ indexes = [
 class Board:
     def __init__(self, numbers):
         self.items = [ (n, False) for n in numbers]
+        self.has_won = False
 
-    def wins(self) -> bool:
+    def _set_winning_condition(self) -> None:
         for i in indexes:
             if (all(self.items[x][1] == True for x in i)):
-                return True
-
-        return False
+                self.has_won = True
+                return
 
     def calc_score(self, winner) -> int:
         return winner * sum([x[0] if x[1] == False else 0 for x in self.items])
@@ -37,6 +37,15 @@ class Board:
         for idx, x in enumerate(self.items):
             if x[0] == number:
                 self.items[idx] = (number, True)
+
+        self._set_winning_condition()
+
+    def wins(self) -> bool:
+        return self.has_won
+
+    @staticmethod
+    def open_boards(boards) -> int:
+        return sum([0 if b.wins() else 1 for b in boards])
 
     def __str__(self):
         return " ".join(f"({i[0]}/{i[1]})" for i in self.items)
@@ -65,15 +74,31 @@ def part_1(filename: str) -> None:
 
     # main loop over every input
     for number in numbers:
-        for board in boards:
+        for idx, board in enumerate(boards):
+
             board.strikeout(number)
+            
             if board.wins():
                 score = board.calc_score(number)
-                print(f"{number+1} wins with {score} points")
+                print(f"{idx+1} wins with {score} points")
                 return
 
+
 def part_2(filename: str) -> None:
-    pass
+    numbers, boards = read_input(filename)
+
+    # main loop over every input
+    for number in numbers:
+        for idx, board in enumerate(boards):
+            if board.wins():
+                continue
+
+            board.strikeout(number)
+
+            if board.wins() and Board.open_boards(boards) == 0:
+                score = board.calc_score(number)
+                print(f"{idx+1} wins with {score} points")
+                return
 
 if __name__ == "__main__":
     filename = sys.argv[1]
