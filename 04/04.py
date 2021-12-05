@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import itertools
-import re
 
-
+"""solution uses a one dimensional data structure.
+   we keep track of horizontal and vertical layout
+   by storing the necessary positions to check.
+"""
 indexes = [
     [0, 1, 2, 3, 4],
     [5, 6, 7, 8, 9],
@@ -18,6 +19,7 @@ indexes = [
     [3, 8, 13, 18, 23],
     [4, 9, 14, 19, 24]
 ]
+
 
 class Board:
     def __init__(self, numbers):
@@ -62,9 +64,8 @@ def read_input(filename: str):
         lines = list(filter(None, f.read().splitlines()))
 
     for i in range(0, len(lines), 5):
-        b = [int(x) for x in " ".join(lines[i:i+5]).split() if x.isdigit()]
-        board = Board(b)
-        boards.append(board)
+        board = [int(x) for x in " ".join(lines[i:i+5]).split() if x.isdigit()]
+        boards.append(Board(board))
 
     return numbers, boards
 
@@ -72,12 +73,11 @@ def read_input(filename: str):
 def part_1(filename: str) -> None:
     numbers, boards = read_input(filename)
 
-    # main loop over every input
     for number in numbers:
         for idx, board in enumerate(boards):
 
             board.strikeout(number)
-            
+
             if board.wins():
                 score = board.calc_score(number)
                 print(f"{idx+1} wins with {score} points")
@@ -87,7 +87,6 @@ def part_1(filename: str) -> None:
 def part_2(filename: str) -> None:
     numbers, boards = read_input(filename)
 
-    # main loop over every input
     for number in numbers:
         for idx, board in enumerate(boards):
             if board.wins():
