@@ -3,6 +3,7 @@
 
 import sys
 
+
 """solution uses a one dimensional data structure.
    we keep track of horizontal and vertical layout
    by storing the necessary positions to check.
@@ -23,10 +24,11 @@ indexes = [
 
 class Board:
     def __init__(self, numbers):
+        """one dimensional array of tuples (number, is_striked_out)"""
         self.items = [ (n, False) for n in numbers]
         self.has_won = False
 
-    def _set_winning_condition(self) -> None:
+    def _eval_winning_condition(self) -> None:
         for i in indexes:
             if (all(self.items[x][1] == True for x in i)):
                 self.has_won = True
@@ -36,37 +38,37 @@ class Board:
         return winner * sum([x[0] if x[1] == False else 0 for x in self.items])
 
     def strikeout(self, number) -> None:
+        """"marks given number and evaluates winning condition"""
         for idx, x in enumerate(self.items):
             if x[0] == number:
                 self.items[idx] = (number, True)
 
-        self._set_winning_condition()
+        self._eval_winning_condition()
 
     def wins(self) -> bool:
         return self.has_won
 
     @staticmethod
     def open_boards(boards) -> int:
+        """"""
         return sum([0 if b.wins() else 1 for b in boards])
 
-    def __str__(self):
+    def __str__(self) -> str:
         return " ".join(f"({i[0]}/{i[1]})" for i in self.items)
 
 
-def read_input(filename: str):
-    numbers = list()
-    boards = list()
+def init_board_from_input(lines):
+    return [int(x) for x in " ".join(lines).split() if x.isdigit()]
 
+def read_input(filename: str):
     with open(filename, "r") as f:
         numbers = [int(x) for x in f.readline().rstrip().split(",")]
 
         # split and filter empty lines
         lines = list(filter(None, f.read().splitlines()))
 
-    for i in range(0, len(lines), 5):
-        board = [int(x) for x in " ".join(lines[i:i+5]).split() if x.isdigit()]
-        boards.append(Board(board))
-
+    boards = [ Board(init_board_from_input(lines[i:i+5]) ) for i in range(0, len(lines), 5)  ]
+    
     return numbers, boards
 
 
