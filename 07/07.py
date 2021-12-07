@@ -24,9 +24,7 @@ def part_2(filename: str) -> None:
     # brute force
     data_max = max(data)
 
-    fuel = sum(sum(range(1, abs(x - 0) + 1)) for x in data)
-    for i in range(1, data_max + 1):
-        fuel = min(fuel, sum(sum(range(1, abs(x - i) + 1)) for x in data))
+    fuel = min([sum(sum(range(1, abs(x - i) + 1)) for x in data) for i in range(0, data_max + 1)])
 
     print(fuel)
 
