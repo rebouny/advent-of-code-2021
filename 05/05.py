@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from io import UnsupportedOperation
 import sys
 import re
 from collections.abc import Iterator
@@ -45,6 +44,7 @@ class LineIterator(Iterator):
         self.line = line
         self.current = line.start
         self.stop_iteration = False
+        # calculate direction to go on __next__
         self.dir_x = 0
         self.dir_y = 0
         if line.start[0] < line.end[0]:
