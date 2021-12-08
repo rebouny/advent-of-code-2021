@@ -2,14 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import sys
+from typing import List
 
 
 class Riddle(object):
-    def __init__(self, codes, values):
+    def __init__(self, codes: List[str], values: List[str]) -> None:
         self.codes = [''.join(sorted(c)) for c in codes]
         self.values = [''.join(sorted(v)) for v in values]
 
-    def solve(self):
+    def solve(self) -> None:
         self.decodes = dict()
 
         self.decodes[1] = list(filter(lambda x: len(x) == 2, self.codes))[0]
@@ -35,11 +36,11 @@ class Riddle(object):
 
         self.decodes[2] = length_5[0]
 
-    def get_digits(self):
+    def get_digits(self) -> List[int]:
         return [ list(self.decodes.keys())[list(self.decodes.values()).index(value)] for value in self.values ]
 
 
-def read_input(filename: str):
+def read_input(filename: str) -> List[Riddle]:
     riddles = list()
 
     with open(filename) as f:
