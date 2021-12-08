@@ -17,45 +17,26 @@ class Riddle(object):
         self.decodes[7] = list(filter(lambda x: len(x) == 3, self.codes))[0]
         self.decodes[8] = list(filter(lambda x: len(x) == 7, self.codes))[0]
 
-        self.decodes[9] = self._decode_9()
-        self.decodes[3] = self._decode_3()
-        self.decodes[0] = self._decode_0()
-        self.decodes[6] = self._decode_6()
-        self.decodes[5] = self._decode_5()
-        self.decodes[2] = self._decode_2()
+        length_6  = list(filter(lambda x: len(x) == 6, self.codes))
+        self.decodes[9] = [x for x in length_6 if set(self.decodes[4]).issubset(set(x))][0]
+        length_6.remove(self.decodes[9])
+
+        length_5 = list(filter(lambda x: len(x) == 5, self.codes))
+        self.decodes[3] = [x for x in length_5 if set(self.decodes[1]).issubset(set(x))][0]
+        length_5.remove(self.decodes[3])
+
+        self.decodes[0] = [x for x in length_6 if set(self.decodes[7]).issubset(set(x))][0]
+        length_6.remove(self.decodes[0])
+
+        self.decodes[6] = length_6[0]
+
+        self.decodes[5] = [x for x in length_5 if len(set(self.decodes[6]).symmetric_difference(set(x))) == 1][0]
+        length_5.remove(self.decodes[5])
+
+        self.decodes[2] = length_5[0]
 
     def get_digits(self):
         return [ list(self.decodes.keys())[list(self.decodes.values()).index(value)] for value in self.values ]
-
-    def _decode_9(self):
-        length_6  = list(filter(lambda x: len(x) == 6, self.codes))
-        return [x for x in length_6 if set(self.decodes[4]).issubset(set(x))][0]
-
-    def _decode_3(self):
-        length_5 = list(filter(lambda x: len(x) == 5, self.codes))
-        return [x for x in length_5 if set(self.decodes[1]).issubset(set(x))][0]
-
-    def _decode_0(self):
-        length_6 = list(filter(lambda x: len(x) == 6, self.codes))
-        length_6.remove(self.decodes[9])
-        return [x for x in length_6 if set(self.decodes[7]).issubset(set(x))][0]
-
-    def _decode_6(self):
-        length_6 = list(filter(lambda x: len(x) == 6, self.codes))
-        length_6.remove(self.decodes[9])
-        length_6.remove(self.decodes[0])
-        return length_6[0]
-
-    def _decode_5(self):
-        length_5  = list(filter(lambda x: len(x) == 5, self.codes))
-        length_5.remove(self.decodes[3])
-        return [x for x in length_5 if len(set(self.decodes[6]).symmetric_difference(set(x))) == 1][0]
-
-    def _decode_2(self):
-        length_5  = list(filter(lambda x: len(x) == 5, self.codes))
-        length_5.remove(self.decodes[3])
-        length_5.remove(self.decodes[5])
-        return length_5[0]
 
 
 def read_input(filename: str):
@@ -63,9 +44,10 @@ def read_input(filename: str):
 
     with open(filename) as f:
         lines = f.readlines()
-        for line in lines:
-            codes, values = line.rstrip().split(" | ", 2)
-            riddles.append(Riddle(codes.split(" "), values.split(" ")))
+    
+    for line in lines:
+        codes, values = line.rstrip().split(" | ", 2)
+        riddles.append(Riddle(codes.split(" "), values.split(" ")))
 
     return riddles
 
