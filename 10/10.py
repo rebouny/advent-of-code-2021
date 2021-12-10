@@ -30,15 +30,6 @@ def part_1(filename: str) -> None:
 
     err = { ']': 0, ')': 0, '}': 0, '>': 0 }
     for line in lines:
-#        nav = deque()
-#        for c in line:
-#            if is_open_char(c):
-#                nav.append(c)
-#            elif matches(nav[-1], c):
-#                nav.pop()
-#            else:
-#                err[c] = err[c] + 1
-#                break
         defect_line, c = has_error(line)
         if (defect_line):
             err[c] = err[c] + 1
@@ -65,29 +56,16 @@ def part_2(filename: str) -> None:
     scores = list()
 
     for line in lines:
-        #nav = deque()
-        #for c in line:
-        #    if is_open_char(c):
-        #        nav.append(c)
-        #    elif matches(nav[-1], c):
-        #        nav.pop()
-        #    else:
-        #        nav.clear()
-        #        break
         defect_line, open_chars = has_error(line)
         if defect_line:
             continue
 
         nav = deque([x for x in open_chars])
-        auto_complete = list()
         if len(nav) > 0:
             nav.reverse()
-            for c in nav:
-                auto_complete.append(pendant[c])
-
             total = 0
-            for c in auto_complete:
-                total = 5 * total + c_score[c]
+            for c in nav:
+                total = 5 * total + c_score[pendant[c]]
 
             scores.append(total)
 
