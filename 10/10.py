@@ -11,6 +11,7 @@ r_pendant = { ')': '(', ']': '[', '}': '{', '<': '>' }
 score = {')': 3, ']': 57, '}': 1197, '>': 25137 }
 c_score = {')': 1, ']': 2, '}': 3, '>': 4 }
 
+
 def is_open_char(c: str) -> bool:
     return c in ['[', '(', '{', '<']
 
@@ -55,7 +56,6 @@ def part_1(filename: str) -> None:
         defect_line, c = has_error(line)
         if (defect_line):
             err[c] += 1
-
 
     print(sum([v * score[k] for k, v in err.items()]))
 
